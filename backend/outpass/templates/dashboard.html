@@ -1,0 +1,757 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hostel Lock System</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ========================================
+           Base Styles & Reset
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* ========================================
+           Header Styles
+           ======================================== */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .header a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* ========================================
+           Container & Layout
+           ======================================== */
+        .container {
+            padding: 30px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* ========================================
+           Welcome Section
+           ======================================== */
+        .welcome-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .welcome-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .welcome-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .info-card label {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-card p {
+            color: #333;
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        /* ========================================
+           Actions Section
+           ======================================== */
+        .actions {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        /* ========================================
+           Outpass List Section
+           ======================================== */
+        .outpass-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .outpass-list h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* ========================================
+           Status Badges
+           ======================================== */
+        .status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+        }
+        
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.pending::before { content: '⏳ '; }
+        .status.approved::before { content: '✓ '; }
+        .status.rejected::before { content: '✗ '; }
+        
+        /* Hostel Status Badges */
+        .hostel-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+        }
+        
+        .hostel-status.inside {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .hostel-status.outside {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .hostel-status.inside::before { content: '🏠 '; }
+        .hostel-status.outside::before { content: '🚶 '; }
+        
+        /* ========================================
+           Table Styles
+           ======================================== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        tr {
+            transition: all 0.2s ease;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+        }
+        
+        tr td:first-child {
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        /* ========================================
+           Empty State
+           ======================================== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #666;
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        /* ========================================
+           Loading State
+           ======================================== */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ========================================
+           Toast Notifications
+           ======================================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            min-width: 300px;
+        }
+        
+        .toast.success {
+            border-left: 4px solid #28a745;
+        }
+        
+        .toast.error {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .toast.info {
+            border-left: 4px solid #17a2b8;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* ========================================
+           Animations
+           ======================================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+            animation-fill-mode: both;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* ========================================
+           Responsive Design
+           ======================================== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .student-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>🏠 Hostel Lock System</h1>
+        <div class="user-info">
+            <span>👤 Welcome, {{ request.user.get_full_name|default:request.user.username }}</span>
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            {% endif %}
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if error %}
+        <div class="welcome-section fade-in" style="border-left: 4px solid #dc3545; margin-bottom: 20px;">
+            <h2 style="font-size: 22px; margin-bottom: 6px;">Student View</h2>
+            <p style="margin-bottom: 0;">{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% if student %}
+        <!-- Welcome Section -->
+        <div class="welcome-section fade-in">
+            <h2>📋 Student Dashboard</h2>
+            <p>Manage your outpass requests and track your hostel status</p>
+            
+            <div class="student-info">
+                <div class="info-card">
+                    <label>Student ID</label>
+                    <p>{{ student.student_id }}</p>
+                </div>
+                <div class="info-card">
+                    <label>Room Number</label>
+                    <p>{{ student.room_number }}</p>
+                </div>
+                <div class="info-card">
+                    <label>Hostel</label>
+                    <p>{{ student.hostel_name }}</p>
+                </div>
+                <div class="info-card">
+                    <label>Phone</label>
+                    <p>{{ student.phone_number }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="actions fade-in">
+            <a href="{% url 'create_pass_api' %}" class="btn">
+                <i class="fas fa-plus"></i> Create New Outpass
+            </a>
+            <button class="btn btn-success" id="mark-in-btn">
+                <i class="fas fa-home"></i> Mark Me as IN
+            </button>
+            <button class="btn btn-secondary" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+        
+        <!-- Outpass List -->
+        <div class="outpass-list fade-in">
+            <h3>📝 Your Outpass Requests</h3>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading your outpass requests...</p>
+            </div>
+            
+            <table id="outpass-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Destination</th>
+                        <th>Departure</th>
+                        <th>Return</th>
+                        <th>Status</th>
+                        <th>Hostel</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody id="outpass-table-body">
+                    <!-- Data will be loaded via JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p>No outpass requests yet. Create your first outpass request!</p>
+                <a href="{% url 'create_pass_api' %}" class="btn">
+                    <i class="fas fa-plus"></i> Create Outpass
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // ============================================================
+        // Student Dashboard JavaScript - Hostel Lock System
+        // ============================================================
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup logout button
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+            const markInBtn = document.getElementById('mark-in-btn');
+            if (!markInBtn) {
+                return;
+            }
+
+            loadMyOutpasses();
+            markInBtn.addEventListener('click', handleMarkIn);
+            setInterval(loadMyOutpasses, 30000);
+        });
+        
+        // Load student's own outpasses
+        async function loadMyOutpasses() {
+            const loading = document.getElementById('loading');
+            const table = document.getElementById('outpass-table');
+            const emptyState = document.getElementById('empty-state');
+            const tbody = document.getElementById('outpass-table-body');
+
+            if (!loading || !table || !emptyState || !tbody) {
+                return;
+            }
+            
+            loading.style.display = 'block';
+            table.style.display = 'none';
+            emptyState.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/my-outpasses/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                const data = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (data.success && data.data.length > 0) {
+                    table.style.display = 'table';
+                    tbody.innerHTML = data.data.map(outpass => `
+                        <tr class="fade-in">
+                            <td>#${outpass.id}</td>
+                            <td>${outpass.destination}</td>
+                            <td>${outpass.departure_date}</td>
+                            <td>${outpass.return_date}</td>
+                            <td>
+                                <span class="status ${outpass.status}">
+                                    ${outpass.status}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="hostel-status ${outpass.hostel_status}">
+                                    ${outpass.hostel_status}
+                                </span>
+                            </td>
+                            <td>${formatDate(outpass.created_at)}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    emptyState.style.display = 'block';
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                console.error('Error loading outpasses:', error);
+                showToast('Failed to load outpass requests', 'error');
+                
+                // Try loading from Django template context as fallback
+                loadFromTemplate();
+            }
+        }
+        
+        // Fallback: Load from Django template context
+        function loadFromTemplate() {
+            const table = document.getElementById('outpass-table');
+            const tbody = document.getElementById('outpass-table-body');
+            const emptyState = document.getElementById('empty-state');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'none';
+            
+            // Check if there's data in the table
+            if (tbody.children.length > 0) {
+                table.style.display = 'table';
+            } else {
+                emptyState.style.display = 'block';
+            }
+        }
+        
+        // Handle logout
+        async function handleLogout(e) {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch('/api/logout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.location.href = '/login/';
+                } else {
+                    showToast(data.message || 'Logout failed', 'error');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Fallback to regular logout
+                window.location.href = '/logout/';
+            }
+        }
+        
+        // Handle Mark IN
+        async function handleMarkIn() {
+            try {
+                const response = await fetch('/api/mark-in/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    loadMyOutpasses();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Mark in error:', error);
+                showToast('Failed to mark as IN', 'error');
+            }
+        }
+        
+        // Get CSRF token from cookie
+        function getCsrfToken() {
+            const name = 'csrftoken';
+            let cookieValue = null;
+            
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            
+            return cookieValue || '';
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '✓';
+            else if (type === 'error') icon = '✗';
+            else icon = 'ℹ';
+            
+            toast.innerHTML = `
+                <span>${icon}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+
+

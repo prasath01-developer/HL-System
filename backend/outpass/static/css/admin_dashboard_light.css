@@ -1,0 +1,103 @@
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --bg-card: #f9f9f9;
+    --bg-card-hover: #f3f5f7;
+    --text-primary: #222222;
+    --text-secondary: #555555;
+    --accent-primary: #2f80ed;
+    --accent-secondary: #56ccf2;
+    --accent-success: #2e7d32;
+    --accent-danger: #c62828;
+    --accent-warning: #f9a825;
+    --accent-info: #0277bd;
+    --border-color: #dddddd;
+    --glass-bg: #f9f9f9;
+    --glass-border: #e6e6e6;
+}
+
+body {
+    background: #ffffff;
+    color: #333333;
+}
+
+.sidebar {
+    background: #ffffff;
+    border-right: 1px solid #dddddd;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-link {
+    color: #333333;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ffffff;
+}
+
+.header {
+    box-shadow: 0 2px 10px rgba(47, 128, 237, 0.12);
+}
+
+.stat-card,
+.chart-card,
+.section {
+    background: #f9f9f9;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none;
+}
+
+.stat-card:hover {
+    background: #f5f5f5;
+}
+
+.stat-card .number,
+.chart-card h3,
+.section h2,
+th,
+td {
+    color: #333333;
+}
+
+th {
+    background: #f1f1f1;
+    border-bottom: 1px solid #dddddd;
+}
+
+tr:hover {
+    background: #f5f8fb;
+}
+
+.table-filters input,
+.table-filters select,
+.form-group input,
+.form-group select {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #d9d9d9;
+}
+
+.modal {
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #d0d0d0;
+}
+
+.loading,
+.empty-state {
+    color: #666666;
+}
+
+.spinner {
+    border-color: #e6e6e6;
+    border-top-color: var(--accent-primary);
+}

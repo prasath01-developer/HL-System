@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Screen</title>
+    <link rel="icon" href="../img/security-system_11094162.png">
+    <link rel="stylesheet" href="../css/outside.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-wrapper">
+            <img src="../img/security-system_11094162.png" alt="profile view"
+                 id="profilePreview" class="profile-preview">
+            <video id="video" width="120" height="120" autoplay></video>
+        </div>
+
+        <div class="title">Capture your image and fill the detail</div>
+
+        <input type="text" id="name" placeholder="Enter the name">
+        <input type="text" id="regno" placeholder="Enter the Register number">
+        <input type="text" id="date" readonly>
+        <input type="text" id="time" readonly>
+
+        <button onclick="validation()">Register</button>
+    </div>
+
+    <script src="../js/outside.js"></script>
+</body>
+</html>

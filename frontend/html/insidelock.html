@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Hostel Lock System</title>
+    <link rel="icon" href="../img/security-system_11094162.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/insidelock.css">
+</head>
+<body>
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <div class="header">
+        <h1>🏠 Hostel Lock System</h1>
+        <div class="header-right">
+            <span id="welcomeText" style="font-size:14px;"></span>
+            <button class="btn-sm btn-white" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Student Info -->
+        <div class="info-grid">
+            <div class="info-card"><label>Student ID</label><p id="infoId">—</p></div>
+            <div class="info-card"><label>Room</label><p id="infoRoom">—</p></div>
+            <div class="info-card"><label>Hostel</label><p id="infoHostel">—</p></div>
+            <div class="info-card"><label>Phone</label><p id="infoPhone">—</p></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn-action btn-purple" onclick="openCreateModal()">
+                <i class="fas fa-plus"></i> New Outpass
+            </button>
+            <button class="btn-action btn-green" onclick="markIn()">
+                <i class="fas fa-home"></i> Mark Me IN
+            </button>
+            <button class="btn-action" style="background:#6c757d;color:white;" onclick="loadOutpasses()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        <!-- Outpass Table -->
+        <div class="section">
+            <div class="section-header">
+                <h3><i class="fas fa-file-alt"></i> My Outpass Requests</h3>
+            </div>
+            <div id="tableState">
+                <div class="spinner-wrap"><div class="spinner"></div><p>Loading...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Outpass Modal -->
+    <div class="overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>New Outpass Request</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="api-msg" id="formMsg"></div>
+                <form id="outpassForm">
+                    <div class="form-group">
+                        <label>Purpose *</label>
+                        <textarea id="purpose" placeholder="Reason for outpass" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination *</label>
+                        <input type="text" id="destination" placeholder="Where are you going?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time Out *</label>
+                        <input type="datetime-local" id="timeOut" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Return Date *</label>
+                        <input type="datetime-local" id="returnDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-submit" id="submitBtn" onclick="submitOutpass()">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/insidelock.js"></script>
+</body>
+</html>

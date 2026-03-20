@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Outpass - Hostel Lock System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+        }
+        
+        .header a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        
+        .container {
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-container h2 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-group .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .form-group input[type="file"] {
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        /* Messages */
+        .api-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        .api-message.show {
+            display: block;
+        }
+        
+        .api-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .api-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .api-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Error field styling */
+        .error-text {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: #dc3545;
+        }
+        
+        .form-group.error .error-text {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Hostel Lock System</h1>
+        <a href="{% url 'student_dashboard' %}">Back to Dashboard</a>
+    </div>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2>Create New Outpass Request</h2>
+            
+            <!-- API Message Container -->
+            <div id="api-message" class="api-message"></div>
+            
+            <form id="outpass-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group" id="group-purpose">
+                    <label for="id_purpose">Purpose of Outpass *</label>
+                    <textarea name="purpose" id="id_purpose" 
+                              placeholder="Explain the purpose of your outpass request" required></textarea>
+                    <span class="error-text" id="error-purpose"></span>
+                </div>
+                
+                <div class="form-group" id="group-destination">
+                    <label for="id_destination">Destination *</label>
+                    <input type="text" name="destination" id="id_destination" 
+                           placeholder="Enter your destination address" required>
+                    <span class="error-text" id="error-destination"></span>
+                </div>
+                
+                <div class="form-group" id="group-time_out">
+                    <label for="id_time_out">Time Out *</label>
+                    <input type="datetime-local" name="time_out" id="id_time_out" required>
+                    <span class="error-text" id="error-time_out"></span>
+                </div>
+                
+                <div class="form-group" id="group-return_date">
+                    <label for="id_return_date">Return Date *</label>
+                    <input type="datetime-local" name="return_date" id="id_return_date" required>
+                    <span class="error-text" id="error-return_date"></span>
+                </div>
+                
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary no-loading" id="submit-btn">Submit Request</button>
+                    <a href="{% url 'student_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Set minimum date/time on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('id_time_out').min = now.toISOString().slice(0, 16);
+            document.getElementById('id_return_date').min = now.toISOString().slice(0, 16);
+            
+            // Update return date minimum when time out changes
+            document.getElementById('id_time_out').addEventListener('change', function() {
+                document.getElementById('id_return_date').min = this.value;
+            });
+        });
+        
+        // Form submission with Fetch API and FormData
+        document.getElementById('outpass-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const messageBox = document.getElementById('api-message');
+            
+            // Clear previous errors
+            clearErrors();
+            messageBox.className = 'api-message';
+            messageBox.textContent = '';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>Submitting...';
+            
+            try {
+                // Create FormData object
+                const formData = new FormData(this);
+                
+                // Get CSRF token
+                const csrfToken = getCsrfToken();
+                
+                // Make API request
+                const response = await fetch('/api/create-outpass/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success message
+                    messageBox.textContent = data.message;
+                    messageBox.className = 'api-message show success';
+                    
+                    // Reset form
+                    document.getElementById('outpass-form').reset();
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(function() {
+                        window.location.href = "{% url 'student_dashboard' %}";
+                    }, 2000);
+                } else {
+                    // Show error message
+                    messageBox.textContent = data.message || 'An error occurred.';
+                    messageBox.className = 'api-message show error';
+                    
+                    // Display field-specific errors
+                    if (data.errors) {
+                        displayErrors(data.errors);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageBox.textContent = 'An unexpected error occurred. Please try again.';
+                messageBox.className = 'api-message show error';
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Request';
+            }
+        });
+        
+        // Helper function to display field errors
+        function displayErrors(errors) {
+            for (const [field, message] of Object.entries(errors)) {
+                const group = document.getElementById('group-' + field);
+                const errorSpan = document.getElementById('error-' + field);
+                
+                if (group) {
+                    group.classList.add('error');
+                }
+                if (errorSpan) {
+                    errorSpan.textContent = message;
+                }
+            }
+        }
+        
+        // Helper function to clear all errors
+        function clearErrors() {
+            document.querySelectorAll('.form-group.error').forEach(function(group) {
+                group.classList.remove('error');
+            });
+            
+            document.querySelectorAll('.error-text').forEach(function(span) {
+                span.textContent = '';
+            });
+        }
+    </script>
+</body>
+</html>
+
+

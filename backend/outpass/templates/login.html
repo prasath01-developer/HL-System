@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Hostel Lock System</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-login:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .messages {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .messages.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .messages.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .messages.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* API Message Box Styles */
+        .api-message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .api-message.show {
+            display: block;
+        }
+        
+        .api-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .api-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .api-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Hostel Lock System</h2>
+        
+        <!-- Django Messages (for server-side messages) -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="messages {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- API Response Message Box -->
+        <div id="api-message" class="api-message"></div>
+        
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- Login Form with ID for JavaScript -->
+        <form id="login-form" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            
+            <button type="submit" class="btn-login" id="login-btn">Login</button>
+        </form>
+        
+        <div class="register-link">
+            <p>Don't have an account? <a href="#">Register here</a></p>
+        </div>
+    </div>
+    
+    <!-- Load JavaScript -->
+    <script src="{% load static %}{% static 'js/script.js' %}"></script>
+    <script>
+        // ============================================================
+        // Login API JavaScript - Hostel Lock System
+        // ============================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const loginBtn = document.getElementById('login-btn');
+            const apiMessage = document.getElementById('api-message');
+            const loading = document.getElementById('loading');
+            
+            // Login form submission handler
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    
+                    // Get form values
+                    const username = document.getElementById('id_username').value.trim();
+                    const password = document.getElementById('id_password').value;
+                    
+                    // Validate inputs
+                    if (!username || !password) {
+                        showMessage('Please enter both username and password.', 'error');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    setLoading(true);
+                    
+                    // Call the login API
+                    loginUser(username, password);
+                });
+            }
+            
+            /**
+             * Login user using Fetch API
+             * @param {string} username - User's username
+             * @param {string} password - User's password
+             */
+            async function loginUser(username, password) {
+                try {
+                    // Get CSRF token from cookie
+                    const csrfToken = getCsrfToken();
+                    
+                    // Make API request
+                    const response = await fetch('/api/login/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        })
+                    });
+                    
+                    // Parse JSON response
+                    const data = await response.json();
+                    
+                    // Hide loading
+                    setLoading(false);
+                    
+                    if (data.success) {
+                        // Show success message
+                        showMessage(data.message, 'success');
+                        
+                        // Redirect to appropriate dashboard after short delay
+                        setTimeout(function() {
+                            window.location.href = data.redirect;
+                        }, 500);
+                    } else {
+                        // Show error message
+                        showMessage(data.message, 'error');
+                    }
+                    
+                } catch (error) {
+                    // Hide loading
+                    setLoading(false);
+                    
+                    // Show error message
+                    console.error('Login error:', error);
+                    showMessage('An error occurred. Please try again.', 'error');
+                }
+            }
+            
+            /**
+             * Get CSRF token from cookie
+             * Django sets csrftoken cookie after first page load
+             * @returns {string} CSRF token
+             */
+            function getCsrfToken() {
+                const name = 'csrftoken';
+                let cookieValue = null;
+                
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                
+                return cookieValue || '';
+            }
+            
+            /**
+             * Show message to user
+             * @param {string} message - Message to display
+             * @param {string} type - Message type (success, error, info)
+             */
+            function showMessage(message, type) {
+                apiMessage.textContent = message;
+                apiMessage.className = 'api-message show ' + type;
+                
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    apiMessage.className = 'api-message';
+                }, 5000);
+            }
+            
+            /**
+             * Set loading state
+             * @param {boolean} isLoading - Whether to show loading
+             */
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = 'Logging in...';
+                    loading.classList.add('show');
+                } else {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    loading.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
